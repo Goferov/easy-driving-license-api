@@ -16,7 +16,7 @@ class QuestionController extends Controller
      */
     public function index()
     {
-        $file = (public_path().'\Baza_pytań_na_egzamin_na_prawo_jazdy_22_02_2022r_2.xlsx');
+        $file = (public_path().'\Baza_pytań_na_egzamin_na_prawo_jazdy_22_02_2022r.xlsx');
         Excel::import(new QuestionImport(), $file);
 
     }

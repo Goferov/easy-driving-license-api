@@ -16,8 +16,9 @@ class QuestionImport implements ToModel, WithHeadingRow
     public function model(array $row)
     {
 
-        dump($row);
-        die();
+//        dump($row);
+//        die();
+        set_time_limit(0);
         if($row['numer_pytania']) {
             return new Question([
                 'type_id' => ($row['zakres_struktury'] == 'PODSTAWOWY' ? '1' : ($row['zakres_struktury'] == 'SPECJALISTYCZNY' ? '2' : '')),
