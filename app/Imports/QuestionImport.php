@@ -17,8 +17,9 @@ class QuestionImport implements ToModel, WithHeadingRow
     {
 
 //        dump($row);
-//        die();
-        set_time_limit(0);
+        //TODO: MAKE UPLOAD TO CATEGORIES :)
+        die('Zablokowane');
+//        set_time_limit(0);
         if($row['numer_pytania']) {
             return new Question([
                 'type_id' => ($row['zakres_struktury'] == 'PODSTAWOWY' ? '1' : ($row['zakres_struktury'] == 'SPECJALISTYCZNY' ? '2' : '')),

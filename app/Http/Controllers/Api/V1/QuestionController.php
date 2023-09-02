@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\StoreQuestionRequest;
 use App\Http\Requests\V1\UpdateQuestionRequest;
 use App\Imports\QuestionImport;
+use App\Http\Resources\V1\QuestionResource;
+use App\Http\Resources\V1\QuestionCollection;
 use App\Models\Question;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -19,6 +21,35 @@ class QuestionController extends Controller
         $file = (public_path().'\Baza_pytań_na_egzamin_na_prawo_jazdy_22_02_2022r.xlsx');
         Excel::import(new QuestionImport(), $file);
 
+    }
+
+
+    public function get_test_questions() {
+
+        $podstawowePunkty = 3;
+        $iloscPytanPodstawowych = 10;
+
+        $pytaniaPodstawowe = Question::where('type_id', '=', '1')
+            ->where('points', '=', $podstawowePunkty)
+            ->limit($iloscPytanPodstawowych)
+            ->get();
+
+        $specjalistycznePunkty = 3;
+        $iloscPytanSpecjalistycznych = 6;
+
+        $pytaniaSpecjalistyczne = Question::where('type_id', '=', '2')
+            ->where('points', '=', $specjalistycznePunkty)
+            ->limit($iloscPytanSpecjalistycznych)
+            ->get();
+
+
+//        dump($pytaniaSpecjalistyczne);
+        $specilised = new QuestionCollection($pytaniaSpecjalistyczne);
+        $primary = new QuestionCollection($pytaniaPodstawowe);
+        return [
+            'primary' => $primary,
+            'specialised' => $specilised
+        ];
     }
 
     /**

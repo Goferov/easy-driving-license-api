@@ -20,14 +20,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // api/v1
 Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], function () { //, 'middleware' => 'auth:sanctum'
-    Route::apiResources([
-//        'customers' => CustomerController::class,
-//        'invoices' => InvoiceController::class,
-        'questions' => QuestionController::class,
-    ]);
+//    Route::apiResources([
+////        'customers' => CustomerController::class,
+////        'invoices' => InvoiceController::class,
+//        'questions' => QuestionController::class,
+//    ]);
 
     Route::post('invoices/bulk',['uses' => 'InvoiceController@bulkStore']);
 
     Route::get('questions/import_excel',['uses' => 'QuestionController@import_csv_questions']);
+    Route::get('questions/get_test_questions',['uses' => 'QuestionController@get_test_questions']);
 
 });
