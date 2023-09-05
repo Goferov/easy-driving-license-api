@@ -102,7 +102,7 @@ class QuestionController extends Controller
 
     public function import_csv_questions()
     {
-//        Excel::import(new UsersImport, $request->file('file')->store('temp'));
-//        return back();
+        $file = (public_path().'\Baza_pytań_na_egzamin_na_prawo_jazdy_22_02_2022r_2.xlsx');
+        Excel::import(new QuestionImport(), $file);
     }
 }

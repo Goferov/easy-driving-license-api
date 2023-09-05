@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\Question;
+use App\Models\Category;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
@@ -15,13 +16,18 @@ class QuestionImport implements ToModel, WithHeadingRow
     */
     public function model(array $row)
     {
+        set_time_limit(0);
 
-//        dump($row);
-        //TODO: MAKE UPLOAD TO CATEGORIES :)
-        die('Zablokowane');
-//        set_time_limit(0);
         if($row['numer_pytania']) {
-            return new Question([
+            $categoryIds = [];
+            $categories = explode(',', $row['kategorie']);
+
+            foreach ($categories as $category) {
+                $categoryQuery = Category::firstOrCreate(['name' => $category]);
+                $categoryIds[] = $categoryQuery->category_id;
+            }
+
+            $questionData = [
                 'type_id' => ($row['zakres_struktury'] == 'PODSTAWOWY' ? '1' : ($row['zakres_struktury'] == 'SPECJALISTYCZNY' ? '2' : '')),
                 'number' => $row['numer_pytania'],
                 'name' => $row['nazwa_pytania'],
@@ -37,11 +43,19 @@ class QuestionImport implements ToModel, WithHeadingRow
                 'goal' => $row['o_co_chcemy_zapytac'],
                 'security_relationship' => (string)$row['jaki_ma_zwiazek_z_bezpieczenstwem'],
                 'subject' => $row['podmiot'],
-            ]);
+            ];
+
+            $question = Question::updateOrCreate(
+                ['number' => $row['numer_pytania']],
+                $questionData
+            );
+
+            $question->categories()->sync($categoryIds);
+
+            return $question;
         }
         else {
             return null;
         }
-
     }
 }

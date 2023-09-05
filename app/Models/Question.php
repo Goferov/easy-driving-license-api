@@ -30,4 +30,9 @@ class Question extends Model
     ];
 
     use HasFactory;
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'question_category', 'question_id', 'category_id');
+    }
 }
