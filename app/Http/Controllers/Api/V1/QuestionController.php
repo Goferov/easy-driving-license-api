@@ -24,7 +24,7 @@ class QuestionController extends Controller
     }
 
 
-    public function get_test_questions() {
+    public function getTestQuestions() {
 
         $podstawowePunkty = 3;
         $iloscPytanPodstawowych = 10;

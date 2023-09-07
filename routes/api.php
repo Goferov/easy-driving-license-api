@@ -28,7 +28,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
 
     Route::post('invoices/bulk',['uses' => 'InvoiceController@bulkStore']);
 
-    Route::get('questions/import_excel',['uses' => 'QuestionController@import_csv_questions']);
-    Route::get('questions/get_test_questions',['uses' => 'QuestionController@get_test_questions']);
+    Route::get('questions/import-excel',['uses' => 'QuestionController@import_csv_questions']);
+    Route::get('questions/get-test-questions',['uses' => 'QuestionController@getTestQuestions']);
 
 });
