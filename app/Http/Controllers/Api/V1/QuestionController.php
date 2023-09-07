@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\StoreQuestionRequest;
 use App\Http\Requests\V1\UpdateQuestionRequest;
@@ -10,6 +11,7 @@ use App\Http\Resources\V1\QuestionResource;
 use App\Http\Resources\V1\QuestionCollection;
 use App\Models\Question;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\DB;
 
 class QuestionController extends Controller
 {
@@ -26,29 +28,50 @@ class QuestionController extends Controller
 
     public function getTestQuestions() {
 
-        $podstawowePunkty = 3;
-        $iloscPytanPodstawowych = 10;
+        $categoryId = 2; // TODO: CATEGORY ID MUST BE SENT BY POST IN FUTURE
+        $start_time = microtime(true);
 
-        $pytaniaPodstawowe = Question::where('type_id', '=', '1')
-            ->where('points', '=', $podstawowePunkty)
-            ->limit($iloscPytanPodstawowych)
-            ->get();
+        $primaryQuestions = Question::whereIn('points', [3, 2, 1])
+            ->where('type_id', '=', '1')
+            ->orderByRaw('RAND()')
+            ->whereHas('categories', function ($query) use ($categoryId) {
+                $query->where('category.category_id', $categoryId);
+            })
+            ->get()
+            ->groupBy('points')
+            ->map(function ($group, $points) {
+                $limit = $points == '3' ? 10 : ($points == '2' ? 6 : 4);
+                return $group->random($limit);
+            })
+            ->flatten(1)
+            ->shuffle();
 
-        $specjalistycznePunkty = 3;
-        $iloscPytanSpecjalistycznych = 6;
+        $specialisedQuestions = Question::whereIn('points', [3, 2, 1])
+            ->where('type_id', '=', '2')
+            ->orderByRaw('RAND()')
+            ->whereHas('categories', function ($query) use ($categoryId) {
+                $query->where('category.category_id', $categoryId);
+            })
+            ->get()
+            ->groupBy('points')
+            ->map(function ($group, $points) {
+                $limit = $points == '3' ? 6 : ($points == '2' ? 4 : 2);
+                return $group->random($limit);
+            })
+            ->flatten(1)
+            ->shuffle();
 
-        $pytaniaSpecjalistyczne = Question::where('type_id', '=', '2')
-            ->where('points', '=', $specjalistycznePunkty)
-            ->limit($iloscPytanSpecjalistycznych)
-            ->get();
+        $primary = new QuestionCollection($primaryQuestions);
+        $specialised = new QuestionCollection($specialisedQuestions);
 
+        $end_time = microtime(true);
+        $execution_time = ($end_time - $start_time) * 1000; // Czas wykonania w milisekundach
 
-//        dump($pytaniaSpecjalistyczne);
-        $specilised = new QuestionCollection($pytaniaSpecjalistyczne);
-        $primary = new QuestionCollection($pytaniaPodstawowe);
+//        echo "Czas wykonania: " . $execution_time . " ms";
+
         return [
             'primary' => $primary,
-            'specialised' => $specilised
+            'specialised' => $specialised
         ];
     }
 
