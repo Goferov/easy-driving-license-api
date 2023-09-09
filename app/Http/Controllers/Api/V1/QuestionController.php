@@ -27,7 +27,6 @@ class QuestionController extends Controller
     public function getTestQuestions() {
 
         $categoryId = 2; // TODO: CATEGORY ID MUST BE SENT BY POST IN FUTURE
-        $start_time = microtime(true);
 
         $primaryQuestions = Question::whereIn('points', [3, 2, 1])
             ->where('type_id', '=', '1')
@@ -63,10 +62,6 @@ class QuestionController extends Controller
         $specialised = new QuestionCollection($specialisedQuestions);
 
         $end_time = microtime(true);
-        $execution_time = ($end_time - $start_time) * 1000; // Czas wykonania w milisekundach
-
-//        echo "Czas wykonania: " . $execution_time . " ms";
-
 
         return [
             'primary' => $primary,
