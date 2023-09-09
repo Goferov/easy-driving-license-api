@@ -8,4 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Exam extends Model
 {
     use HasFactory;
+
+    protected $table = 'exam';
+    protected $primaryKey = 'exam_id';
+    public $timestamps = false;
+
+    protected $fillable = [
+        'user_id',
+        'category_id',
+    ];
+    public function answers() {
+        return $this->hasMany(Answer::class);
+    }
 }
