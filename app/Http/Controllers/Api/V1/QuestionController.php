@@ -27,7 +27,6 @@ class QuestionController extends Controller
     public function getTestQuestions() {
 
         $categoryId = 2; // TODO: CATEGORY ID MUST BE SENT BY POST IN FUTURE
-
         $primaryQuestions = Question::whereIn('points', [3, 2, 1])
             ->where('type_id', '=', '1')
             ->orderByRaw('RAND()')
