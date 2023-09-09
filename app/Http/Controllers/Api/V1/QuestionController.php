@@ -20,8 +20,6 @@ class QuestionController extends Controller
      */
     public function index()
     {
-        $file = (public_path().'\Baza_pytań_na_egzamin_na_prawo_jazdy_22_02_2022r.xlsx');
-        Excel::import(new QuestionImport(), $file);
 
     }
 
@@ -68,6 +66,7 @@ class QuestionController extends Controller
         $execution_time = ($end_time - $start_time) * 1000; // Czas wykonania w milisekundach
 
 //        echo "Czas wykonania: " . $execution_time . " ms";
+
 
         return [
             'primary' => $primary,
