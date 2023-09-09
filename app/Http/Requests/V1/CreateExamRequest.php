@@ -3,6 +3,7 @@
 namespace App\Http\Requests\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
+//use Illuminate\Validation\Validator;
 
 class CreateExamRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class CreateExamRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +23,12 @@ class CreateExamRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'primary' => ['required', 'array', 'size:20', 'bail'],
+            'specialised' => ['required', 'array', 'size:12', 'bail'],
+            'primary.*.id' => 'required|numeric',
+            'specialised.*.id' => 'required|numeric',
+            'primary.*.answer' => 'nullable|in:T,N',
+            'specialised.*.answer' => 'nullable|in:A,B,C',
         ];
     }
 }

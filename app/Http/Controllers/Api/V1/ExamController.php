@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\V1\CreateExamRequest;
 use App\Models\Exam;
 use Illuminate\Http\Request;
 
@@ -19,7 +20,7 @@ class ExamController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(CreateExamRequest $request)
     {
         //
     }
