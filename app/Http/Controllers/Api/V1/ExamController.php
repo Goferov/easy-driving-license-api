@@ -24,12 +24,12 @@ class ExamController extends Controller
      */
     public function create(CreateExamRequest $request)
     {
-
         $data = $request->all();
 
         $exam = Exam::create([
             'user_id' => auth()->user()?->id,
             'category_id' => 2 // TODO: MAKE MORE CATEGORIES IN FUTURE
+            //'points' ??? TODO: Push all points to db?
         ]);
 
         $this->addAnswers($exam, $data);
@@ -85,6 +85,7 @@ class ExamController extends Controller
                 'exam_id' => $exam->exam_id,
                 'question_id' => $answer['id'],
                 'answer' => $answer['answer'],
+                // 'is_correct' ???
             ]);
         }
     }
