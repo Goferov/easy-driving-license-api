@@ -7,5 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Answer extends Model
 {
+    protected $table = 'answer';
+    protected $primaryKey = 'answer_id';
+    public $timestamps = false;
+
+    protected $fillable = [
+        'exam_id',
+        'question_id',
+        'answer',
+    ];
+
     use HasFactory;
 }

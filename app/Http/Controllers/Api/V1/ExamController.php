@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\CreateExamRequest;
 use App\Models\Exam;
+use App\Models\Answer;
 use Illuminate\Http\Request;
 
 class ExamController extends Controller
@@ -17,16 +18,22 @@ class ExamController extends Controller
         //
     }
 
+
     /**
      * Show the form for creating a new resource.
      */
     public function create(CreateExamRequest $request)
     {
+
         $data = $request->all();
 
-        $exam_id = Exam::create([
-
+        $exam = Exam::create([
+            'user_id' => auth()->user()?->id,
+            'category_id' => 2 // TODO: MAKE MORE CATEGORIES IN FUTURE
         ]);
+
+        $this->addAnswers($exam, $data);
+
     }
 
     /**
@@ -67,5 +74,18 @@ class ExamController extends Controller
     public function destroy(Exam $exam)
     {
         //
+    }
+
+    private function addAnswers(Exam $exam, $data)
+    {
+        $answers = array_merge($data['primary'],$data['specialised']);
+
+        foreach ($answers as $answer) {
+            Answer::create([
+                'exam_id' => $exam->exam_id,
+                'question_id' => $answer['id'],
+                'answer' => $answer['answer'],
+            ]);
+        }
     }
 }
