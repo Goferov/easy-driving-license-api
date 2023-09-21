@@ -33,5 +33,5 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
 
     Route::post('exam/end-of-test', ['uses' => 'ExamController@create']);
 
-    Route::post('exam/get-exam/{id}', ['uses' => 'ExamController@show']);
+    Route::get('exam/get-exam/{id}', ['uses' => 'ExamController@show']);
 });
