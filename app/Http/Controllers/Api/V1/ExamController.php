@@ -50,7 +50,7 @@ class ExamController extends Controller
      */
     public function show(int $id)
     {
-        dump($id);
+
     }
 
     /**
