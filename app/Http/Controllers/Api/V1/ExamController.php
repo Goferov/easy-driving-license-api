@@ -8,6 +8,8 @@ use App\Models\Exam;
 use App\Models\Question;
 use App\Models\Answer;
 use Illuminate\Http\Request;
+use App\Http\Resources\V1\ExamCollection;
+use App\Http\Resources\V1\ExamResource;
 
 class ExamController extends Controller
 {
@@ -50,7 +52,8 @@ class ExamController extends Controller
      */
     public function show(int $id)
     {
-
+        $exam = Exam::with('answers')->find($id);
+        return new ExamResource($exam);
     }
 
     /**

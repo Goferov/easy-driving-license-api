@@ -19,6 +19,6 @@ class Exam extends Model
         'all_points',
     ];
     public function answers() {
-        return $this->hasMany(Answer::class);
+        return $this->hasMany(Answer::class, 'exam_id');
     }
 }
