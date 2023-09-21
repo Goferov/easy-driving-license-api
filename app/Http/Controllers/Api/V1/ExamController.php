@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\CreateExamRequest;
 use App\Models\Exam;
+use App\Models\Question;
 use App\Models\Answer;
 use Illuminate\Http\Request;
 
@@ -13,6 +14,7 @@ class ExamController extends Controller
     /**
      * Display a listing of the resource.
      */
+
     public function index()
     {
         //
@@ -26,10 +28,13 @@ class ExamController extends Controller
     {
         $data = $request->all();
 
+        $this->getExamAllPoints($data);
+        die();
+
         $exam = Exam::create([
             'user_id' => auth()->user()?->id,
-            'category_id' => 2 // TODO: MAKE MORE CATEGORIES IN FUTURE
-            //'points' ??? TODO: Push all points to db?
+            'category_id' => 2, // TODO: MAKE MORE CATEGORIES IN FUTURE
+            'all_points' => $this->getExamAllPoints($data)
         ]);
 
         $this->addAnswers($exam, $data);
@@ -78,15 +83,42 @@ class ExamController extends Controller
 
     private function addAnswers(Exam $exam, $data)
     {
-        $answers = array_merge($data['primary'],$data['specialised']);
+        $answers = $this->mergeAnswers($data);
 
         foreach ($answers as $answer) {
-            Answer::create([
-                'exam_id' => $exam->exam_id,
-                'question_id' => $answer['id'],
-                'answer' => $answer['answer'],
-                // 'is_correct' ???
-            ]);
+
+
+//            Answer::create([
+//                'exam_id' => $exam->exam_id,
+//                'question_id' => $answer['id'],
+//                'answer' => $answer['answer'],
+//                // 'is_correct' ???
+//            ]);
         }
+    }
+
+    private function getExamAllPoints($answers) {
+        $answers = $this->mergeAnswers($answers);
+        $allPoints = 0;
+        foreach ($answers as $answer) {
+            $allPoints += $this->isCorrectAnswer($answer['id'], $answer['answer']);
+        }
+        return $allPoints;
+    }
+
+    private function isCorrectAnswer($questionId, $answer) {
+        $question = Question::find($questionId);
+
+        if($question) {
+            if($answer === $question->good_answer) {
+                return $question->points;
+            }
+        }
+
+        return 0;
+    }
+
+    private function mergeAnswers($answers) {
+        return array_merge($answers['primary'], $answers['specialised']);
     }
 }
