@@ -16,6 +16,7 @@ class Exam extends Model
     protected $fillable = [
         'user_id',
         'category_id',
+        'all_points',
     ];
     public function answers() {
         return $this->hasMany(Answer::class);

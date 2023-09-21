@@ -28,9 +28,6 @@ class ExamController extends Controller
     {
         $data = $request->all();
 
-        $this->getExamAllPoints($data);
-        die();
-
         $exam = Exam::create([
             'user_id' => auth()->user()?->id,
             'category_id' => 2, // TODO: MAKE MORE CATEGORIES IN FUTURE
@@ -38,7 +35,6 @@ class ExamController extends Controller
         ]);
 
         $this->addAnswers($exam, $data);
-
     }
 
     /**
@@ -86,14 +82,12 @@ class ExamController extends Controller
         $answers = $this->mergeAnswers($data);
 
         foreach ($answers as $answer) {
-
-
-//            Answer::create([
-//                'exam_id' => $exam->exam_id,
-//                'question_id' => $answer['id'],
-//                'answer' => $answer['answer'],
-//                // 'is_correct' ???
-//            ]);
+            Answer::create([
+                'exam_id' => $exam->exam_id,
+                'question_id' => $answer['id'],
+                'answer' => $answer['answer'],
+                'is_correct' => !($this->isCorrectAnswer($answer['id'], $answer['answer']) == 0),
+            ]);
         }
     }
 
@@ -108,13 +102,11 @@ class ExamController extends Controller
 
     private function isCorrectAnswer($questionId, $answer) {
         $question = Question::find($questionId);
-
         if($question) {
             if($answer === $question->good_answer) {
                 return $question->points;
             }
         }
-
         return 0;
     }
 

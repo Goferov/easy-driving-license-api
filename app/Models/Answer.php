@@ -15,6 +15,7 @@ class Answer extends Model
         'exam_id',
         'question_id',
         'answer',
+        'is_correct',
     ];
 
     use HasFactory;
