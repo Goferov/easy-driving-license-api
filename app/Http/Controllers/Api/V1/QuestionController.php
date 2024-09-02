@@ -20,16 +20,15 @@ class QuestionController extends Controller
      */
     public function index()
     {
+        die();
         $file = (public_path().'\Baza_pytań_na_egzamin_na_prawo_jazdy_22_02_2022r.xlsx');
         Excel::import(new QuestionImport(), $file);
-
     }
 
 
     public function getTestQuestions() {
 
-        $categoryId = 2; // TODO: CATEGORY ID MUST BE SENT BY POST IN FUTURE
-        $start_time = microtime(true);
+        $categoryId = 2; // TODO: CATEGORY ID MUST BE SENT BY POST IN THE FUTURE
 
         $primaryQuestions = Question::whereIn('points', [3, 2, 1])
             ->where('type_id', '=', '1')
@@ -63,11 +62,6 @@ class QuestionController extends Controller
 
         $primary = new QuestionCollection($primaryQuestions);
         $specialised = new QuestionCollection($specialisedQuestions);
-
-        $end_time = microtime(true);
-        $execution_time = ($end_time - $start_time) * 1000; // Czas wykonania w milisekundach
-
-//        echo "Czas wykonania: " . $execution_time . " ms";
 
         return [
             'primary' => $primary,
