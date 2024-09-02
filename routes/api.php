@@ -31,4 +31,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
     Route::get('questions/import-excel',['uses' => 'QuestionController@import_csv_questions']);
     Route::get('questions/get-test-questions',['uses' => 'QuestionController@getTestQuestions']);
 
+    Route::post('exam/end-of-test', ['uses' => 'ExamController@create']);
+
+    Route::get('exam/get-exam/{id}', ['uses' => 'ExamController@show']);
 });
